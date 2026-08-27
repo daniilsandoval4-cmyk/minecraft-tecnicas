@@ -4,289 +4,295 @@
 // LOGIN + 5 SECOND PROMPT
 // =====================================
 
-const loginButton = document.getElementById("loginButton");
-const loginModal = document.getElementById("loginModal");
-const closeModal = document.getElementById("closeModal");
+document.addEventListener("DOMContentLoaded", function () {
 
-const registerButton = document.getElementById("registerButton");
-const loginExistingButton = document.getElementById("loginExistingButton");
-const logoutButton = document.getElementById("logoutButton");
+    const loginButton = document.getElementById("loginButton");
+    const loginModal = document.getElementById("loginModal");
+    const closeModal = document.getElementById("closeModal");
 
-const usernameInput = document.getElementById("usernameInput");
-const passwordInput = document.getElementById("passwordInput");
+    const registerButton = document.getElementById("registerButton");
+    const loginExistingButton = document.getElementById("loginExistingButton");
+    const logoutButton = document.getElementById("logoutButton");
 
-const accountMessage = document.getElementById("accountMessage");
+    const usernameInput = document.getElementById("usernameInput");
+    const passwordInput = document.getElementById("passwordInput");
 
-const profile = document.getElementById("profile");
-const avatar = document.getElementById("avatar");
-const usernameDisplay = document.getElementById("usernameDisplay");
+    const accountMessage = document.getElementById("accountMessage");
 
-// =====================================
-// CHECK ELEMENTS
-// =====================================
+    const profile = document.getElementById("profile");
+    const avatar = document.getElementById("avatar");
+    const usernameDisplay = document.getElementById("usernameDisplay");
 
-if (
-    !loginButton ||
-    !loginModal ||
-    !closeModal ||
-    !registerButton ||
-    !loginExistingButton ||
-    !logoutButton ||
-    !usernameInput ||
-    !passwordInput ||
-    !accountMessage ||
-    !profile ||
-    !avatar ||
-    !usernameDisplay
-) {
-    console.error("MC PVP TECNICAS: Falta uno o más elementos HTML.");
-} else {
 
-// =====================================
-// OPEN LOGIN
-// =====================================
+    // =====================================
+    // OPEN LOGIN
+    // =====================================
 
-loginButton.onclick = function () {
-    loginModal.classList.remove("hidden");
-    usernameInput.focus();
-};
-
-// =====================================
-// CLOSE LOGIN
-// =====================================
-
-closeModal.onclick = function () {
-    loginModal.classList.add("hidden");
-};
-
-// =====================================
-// CLICK OUTSIDE MODAL
-// =====================================
-
-loginModal.onclick = function (event) {
-
-    if (event.target === loginModal) {
-        loginModal.classList.add("hidden");
-    }
-
-};
-
-// =====================================
-// CREATE ACCOUNT
-// =====================================
-
-registerButton.onclick = function () {
-
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
-
-    if (username.length < 3) {
-
-        accountMessage.textContent =
-            "❌ El usuario necesita mínimo 3 caracteres.";
-
-        return;
-    }
-
-    if (password.length < 4) {
-
-        accountMessage.textContent =
-            "❌ La contraseña necesita mínimo 4 caracteres.";
-
-        return;
-    }
-
-    let accounts;
-
-    try {
-        accounts =
-            JSON.parse(
-                localStorage.getItem("mcAccounts") || "{}"
-            );
-    } catch (error) {
-        accounts = {};
-        console.error("Error leyendo las cuentas:", error);
-    }
-
-    if (accounts[username]) {
-
-        accountMessage.textContent =
-            "❌ Ese usuario ya existe.";
-
-        return;
-    }
-
-    accounts[username] = {
-        username: username,
-        password: password
+    loginButton.onclick = function () {
+        loginModal.classList.remove("hidden");
+        usernameInput.focus();
     };
 
-    localStorage.setItem(
-        "mcAccounts",
-        JSON.stringify(accounts)
-    );
 
-    localStorage.setItem(
-        "mcCurrentUser",
-        username
-    );
+    // =====================================
+    // CLOSE LOGIN
+    // =====================================
 
-    accountMessage.textContent =
-        "✅ ¡Cuenta creada!";
-
-    setTimeout(function () {
-
+    closeModal.onclick = function () {
         loginModal.classList.add("hidden");
+    };
 
-        usernameInput.value = "";
-        passwordInput.value = "";
 
-        updateProfile();
+    // =====================================
+    // CLICK OUTSIDE MODAL
+    // =====================================
 
-    }, 700);
+    loginModal.onclick = function (event) {
 
-};
+        if (event.target === loginModal) {
+            loginModal.classList.add("hidden");
+        }
 
-// =====================================
-// LOGIN
-// =====================================
+    };
 
-loginExistingButton.onclick = function () {
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
+    // =====================================
+    // CREATE ACCOUNT
+    // =====================================
 
-    let accounts;
+    registerButton.onclick = function () {
 
-    try {
-        accounts =
-            JSON.parse(
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        if (username.length < 3) {
+
+            accountMessage.textContent =
+                "❌ El usuario necesita mínimo 3 caracteres.";
+
+            return;
+        }
+
+        if (password.length < 4) {
+
+            accountMessage.textContent =
+                "❌ La contraseña necesita mínimo 4 caracteres.";
+
+            return;
+        }
+
+        let accounts;
+
+        try {
+
+            accounts = JSON.parse(
                 localStorage.getItem("mcAccounts") || "{}"
             );
-    } catch (error) {
-        accounts = {};
-        console.error("Error leyendo las cuentas:", error);
-    }
 
-    if (!accounts[username]) {
+        } catch (error) {
+
+            accounts = {};
+
+        }
+
+
+        if (accounts[username]) {
+
+            accountMessage.textContent =
+                "❌ Ese usuario ya existe.";
+
+            return;
+        }
+
+
+        accounts[username] = {
+            username: username,
+            password: password
+        };
+
+
+        localStorage.setItem(
+            "mcAccounts",
+            JSON.stringify(accounts)
+        );
+
+
+        localStorage.setItem(
+            "mcCurrentUser",
+            username
+        );
+
 
         accountMessage.textContent =
-            "❌ Esa cuenta no existe.";
+            "✅ ¡Cuenta creada!";
 
-        return;
-    }
 
-    if (accounts[username].password !== password) {
+        setTimeout(function () {
+
+            loginModal.classList.add("hidden");
+
+            usernameInput.value = "";
+            passwordInput.value = "";
+
+            updateProfile();
+
+        }, 700);
+
+    };
+
+
+    // =====================================
+    // LOGIN
+    // =====================================
+
+    loginExistingButton.onclick = function () {
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        let accounts;
+
+        try {
+
+            accounts = JSON.parse(
+                localStorage.getItem("mcAccounts") || "{}"
+            );
+
+        } catch (error) {
+
+            accounts = {};
+
+        }
+
+
+        if (!accounts[username]) {
+
+            accountMessage.textContent =
+                "❌ Esa cuenta no existe.";
+
+            return;
+        }
+
+
+        if (accounts[username].password !== password) {
+
+            accountMessage.textContent =
+                "❌ Contraseña incorrecta.";
+
+            return;
+        }
+
+
+        localStorage.setItem(
+            "mcCurrentUser",
+            username
+        );
+
 
         accountMessage.textContent =
-            "❌ Contraseña incorrecta.";
+            "✅ ¡Sesión iniciada!";
 
-        return;
-    }
 
-    localStorage.setItem(
-        "mcCurrentUser",
-        username
-    );
+        setTimeout(function () {
 
-    accountMessage.textContent =
-        "✅ ¡Sesión iniciada!";
+            loginModal.classList.add("hidden");
 
-    setTimeout(function () {
+            usernameInput.value = "";
+            passwordInput.value = "";
 
-        loginModal.classList.add("hidden");
+            updateProfile();
 
-        usernameInput.value = "";
-        passwordInput.value = "";
+        }, 500);
 
-        updateProfile();
+    };
 
-    }, 500);
 
-};
+    // =====================================
+    // LOGOUT
+    // =====================================
 
-// =====================================
-// LOGOUT
-// =====================================
+    logoutButton.onclick = function () {
 
-logoutButton.onclick = function () {
-
-    localStorage.removeItem(
-        "mcCurrentUser"
-    );
-
-    updateProfile();
-
-};
-
-// =====================================
-// UPDATE PROFILE
-// =====================================
-
-function updateProfile() {
-
-    const username =
-        localStorage.getItem(
+        localStorage.removeItem(
             "mcCurrentUser"
         );
 
-    if (username) {
+        updateProfile();
 
-        loginButton.classList.add("hidden");
+    };
 
-        profile.classList.remove("hidden");
 
-        usernameDisplay.textContent =
-            username;
+    // =====================================
+    // UPDATE PROFILE
+    // =====================================
 
-        avatar.textContent =
-            username.charAt(0).toUpperCase();
+    function updateProfile() {
 
-    }
+        const username =
+            localStorage.getItem("mcCurrentUser");
 
-    else {
 
-        loginButton.classList.remove("hidden");
+        if (username) {
 
-        profile.classList.add("hidden");
+            loginButton.classList.add("hidden");
 
-    }
+            profile.classList.remove("hidden");
 
-}
+            usernameDisplay.textContent =
+                username;
 
-// =====================================
-// 5 SECOND SIGN-IN PROMPT
-// =====================================
+            avatar.textContent =
+                username.charAt(0).toUpperCase();
 
-setTimeout(function () {
+        }
 
-    const alreadyLoggedIn =
-        localStorage.getItem("mcCurrentUser");
+        else {
 
-    if (!alreadyLoggedIn) {
+            loginButton.classList.remove("hidden");
 
-        const wantsToSignIn = confirm(
-            "⚔️ ¿Quieres aprender más técnicas de Minecraft PvP?\n\n" +
-            "Crea una cuenta o inicia sesión para desbloquear más técnicas."
-        );
-
-        if (wantsToSignIn) {
-
-            loginModal.classList.remove("hidden");
-
-            usernameInput.focus();
+            profile.classList.add("hidden");
 
         }
 
     }
 
-}, 5000);
 
-// =====================================
-// START
-// =====================================
+    // =====================================
+    // 5 SECOND SIGN-IN POPUP
+    // =====================================
 
-updateProfile();
+    setTimeout(function () {
 
-}
+        const alreadyLoggedIn =
+            localStorage.getItem("mcCurrentUser");
+
+
+        if (!alreadyLoggedIn) {
+
+            const wantsToSignIn = confirm(
+                "⚔️ ¿Quieres aprender más técnicas de Minecraft PvP?\n\n" +
+                "Crea una cuenta o inicia sesión para desbloquear más técnicas."
+            );
+
+
+            if (wantsToSignIn) {
+
+                loginModal.classList.remove("hidden");
+
+                usernameInput.focus();
+
+            }
+
+        }
+
+    }, 5000);
+
+
+    // =====================================
+    // START
+    // =====================================
+
+    updateProfile();
+
+});
 ```

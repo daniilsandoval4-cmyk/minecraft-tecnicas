@@ -1,3 +1,4 @@
+```javascript
 // =====================================
 // MC PVP TECNICAS
 // LOGIN + 5 SECOND PROMPT
@@ -20,6 +21,26 @@ const profile = document.getElementById("profile");
 const avatar = document.getElementById("avatar");
 const usernameDisplay = document.getElementById("usernameDisplay");
 
+// =====================================
+// CHECK ELEMENTS
+// =====================================
+
+if (
+    !loginButton ||
+    !loginModal ||
+    !closeModal ||
+    !registerButton ||
+    !loginExistingButton ||
+    !logoutButton ||
+    !usernameInput ||
+    !passwordInput ||
+    !accountMessage ||
+    !profile ||
+    !avatar ||
+    !usernameDisplay
+) {
+    console.error("MC PVP TECNICAS: Falta uno o más elementos HTML.");
+} else {
 
 // =====================================
 // OPEN LOGIN
@@ -30,7 +51,6 @@ loginButton.onclick = function () {
     usernameInput.focus();
 };
 
-
 // =====================================
 // CLOSE LOGIN
 // =====================================
@@ -38,7 +58,6 @@ loginButton.onclick = function () {
 closeModal.onclick = function () {
     loginModal.classList.add("hidden");
 };
-
 
 // =====================================
 // CLICK OUTSIDE MODAL
@@ -51,7 +70,6 @@ loginModal.onclick = function (event) {
     }
 
 };
-
 
 // =====================================
 // CREATE ACCOUNT
@@ -78,10 +96,17 @@ registerButton.onclick = function () {
         return;
     }
 
-    let accounts =
-        JSON.parse(
-            localStorage.getItem("mcAccounts") || "{}"
-        );
+    let accounts;
+
+    try {
+        accounts =
+            JSON.parse(
+                localStorage.getItem("mcAccounts") || "{}"
+            );
+    } catch (error) {
+        accounts = {};
+        console.error("Error leyendo las cuentas:", error);
+    }
 
     if (accounts[username]) {
 
@@ -122,7 +147,6 @@ registerButton.onclick = function () {
 
 };
 
-
 // =====================================
 // LOGIN
 // =====================================
@@ -132,10 +156,17 @@ loginExistingButton.onclick = function () {
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
-    let accounts =
-        JSON.parse(
-            localStorage.getItem("mcAccounts") || "{}"
-        );
+    let accounts;
+
+    try {
+        accounts =
+            JSON.parse(
+                localStorage.getItem("mcAccounts") || "{}"
+            );
+    } catch (error) {
+        accounts = {};
+        console.error("Error leyendo las cuentas:", error);
+    }
 
     if (!accounts[username]) {
 
@@ -174,7 +205,6 @@ loginExistingButton.onclick = function () {
 
 };
 
-
 // =====================================
 // LOGOUT
 // =====================================
@@ -188,7 +218,6 @@ logoutButton.onclick = function () {
     updateProfile();
 
 };
-
 
 // =====================================
 // UPDATE PROFILE
@@ -225,7 +254,6 @@ function updateProfile() {
 
 }
 
-
 // =====================================
 // 5 SECOND SIGN-IN PROMPT
 // =====================================
@@ -254,9 +282,11 @@ setTimeout(function () {
 
 }, 5000);
 
-
 // =====================================
 // START
 // =====================================
 
 updateProfile();
+
+}
+```

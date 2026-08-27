@@ -1,6 +1,7 @@
-// ================================
-// SISTEMA DE CUENTAS
-// ================================
+// =====================================
+// MC PVP TECNICAS
+// LOGIN + 5 SECOND PROMPT
+// =====================================
 
 const loginButton = document.getElementById("loginButton");
 const loginModal = document.getElementById("loginModal");
@@ -20,51 +21,46 @@ const avatar = document.getElementById("avatar");
 const usernameDisplay = document.getElementById("usernameDisplay");
 
 
-// ================================
-// ABRIR VENTANA
-// ================================
+// =====================================
+// OPEN LOGIN
+// =====================================
 
 loginButton.onclick = function () {
-
     loginModal.classList.remove("hidden");
-
+    usernameInput.focus();
 };
 
 
-// ================================
-// CERRAR VENTANA
-// ================================
+// =====================================
+// CLOSE LOGIN
+// =====================================
 
 closeModal.onclick = function () {
-
     loginModal.classList.add("hidden");
-
 };
 
 
-// CERRAR AL HACER CLICK AFUERA
-// ================================
+// =====================================
+// CLICK OUTSIDE MODAL
+// =====================================
 
 loginModal.onclick = function (event) {
 
     if (event.target === loginModal) {
-
         loginModal.classList.add("hidden");
-
     }
 
 };
 
 
-// ================================
-// CREAR CUENTA
-// ================================
+// =====================================
+// CREATE ACCOUNT
+// =====================================
 
 registerButton.onclick = function () {
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
-
 
     if (username.length < 3) {
 
@@ -72,9 +68,7 @@ registerButton.onclick = function () {
             "❌ El usuario necesita mínimo 3 caracteres.";
 
         return;
-
     }
-
 
     if (password.length < 4) {
 
@@ -82,15 +76,12 @@ registerButton.onclick = function () {
             "❌ La contraseña necesita mínimo 4 caracteres.";
 
         return;
-
     }
-
 
     let accounts =
         JSON.parse(
             localStorage.getItem("mcAccounts") || "{}"
         );
-
 
     if (accounts[username]) {
 
@@ -98,33 +89,25 @@ registerButton.onclick = function () {
             "❌ Ese usuario ya existe.";
 
         return;
-
     }
 
-
     accounts[username] = {
-
         username: username,
         password: password
-
     };
-
 
     localStorage.setItem(
         "mcAccounts",
         JSON.stringify(accounts)
     );
 
-
     localStorage.setItem(
         "mcCurrentUser",
         username
     );
 
-
     accountMessage.textContent =
         "✅ ¡Cuenta creada!";
-
 
     setTimeout(function () {
 
@@ -140,21 +123,19 @@ registerButton.onclick = function () {
 };
 
 
-// ================================
-// INICIAR SESIÓN
-// ================================
+// =====================================
+// LOGIN
+// =====================================
 
 loginExistingButton.onclick = function () {
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
-
     let accounts =
         JSON.parse(
             localStorage.getItem("mcAccounts") || "{}"
         );
-
 
     if (!accounts[username]) {
 
@@ -162,9 +143,7 @@ loginExistingButton.onclick = function () {
             "❌ Esa cuenta no existe.";
 
         return;
-
     }
-
 
     if (accounts[username].password !== password) {
 
@@ -172,19 +151,15 @@ loginExistingButton.onclick = function () {
             "❌ Contraseña incorrecta.";
 
         return;
-
     }
-
 
     localStorage.setItem(
         "mcCurrentUser",
         username
     );
 
-
     accountMessage.textContent =
         "✅ ¡Sesión iniciada!";
-
 
     setTimeout(function () {
 
@@ -200,9 +175,9 @@ loginExistingButton.onclick = function () {
 };
 
 
-// ================================
-// CERRAR SESIÓN
-// ================================
+// =====================================
+// LOGOUT
+// =====================================
 
 logoutButton.onclick = function () {
 
@@ -215,9 +190,9 @@ logoutButton.onclick = function () {
 };
 
 
-// ================================
-// ACTUALIZAR PERFIL
-// ================================
+// =====================================
+// UPDATE PROFILE
+// =====================================
 
 function updateProfile() {
 
@@ -226,17 +201,14 @@ function updateProfile() {
             "mcCurrentUser"
         );
 
-
     if (username) {
 
         loginButton.classList.add("hidden");
 
         profile.classList.remove("hidden");
 
-
         usernameDisplay.textContent =
             username;
-
 
         avatar.textContent =
             username.charAt(0).toUpperCase();
@@ -254,8 +226,37 @@ function updateProfile() {
 }
 
 
-// ================================
-// INICIAR
-// ================================
+// =====================================
+// 5 SECOND SIGN-IN PROMPT
+// =====================================
+
+setTimeout(function () {
+
+    const alreadyLoggedIn =
+        localStorage.getItem("mcCurrentUser");
+
+    if (!alreadyLoggedIn) {
+
+        const wantsToSignIn = confirm(
+            "⚔️ ¿Quieres aprender más técnicas de Minecraft PvP?\n\n" +
+            "Crea una cuenta o inicia sesión para desbloquear más técnicas."
+        );
+
+        if (wantsToSignIn) {
+
+            loginModal.classList.remove("hidden");
+
+            usernameInput.focus();
+
+        }
+
+    }
+
+}, 5000);
+
+
+// =====================================
+// START
+// =====================================
 
 updateProfile();

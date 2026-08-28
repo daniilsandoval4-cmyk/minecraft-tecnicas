@@ -6,6 +6,10 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    // =====================================
+    // ELEMENTS
+    // =====================================
+
     const loginButton = document.getElementById("loginButton");
     const loginModal = document.getElementById("loginModal");
     const closeModal = document.getElementById("closeModal");
@@ -28,60 +32,75 @@ document.addEventListener("DOMContentLoaded", function () {
     // OPEN LOGIN
     // =====================================
 
-    loginButton.onclick = function () {
+    loginButton.addEventListener("click", function () {
+
         loginModal.classList.remove("hidden");
+
+        accountMessage.textContent = "";
+
         usernameInput.focus();
-    };
+
+    });
 
 
     // =====================================
     // CLOSE LOGIN
     // =====================================
 
-    closeModal.onclick = function () {
+    closeModal.addEventListener("click", function () {
+
         loginModal.classList.add("hidden");
-    };
+
+    });
 
 
     // =====================================
     // CLICK OUTSIDE MODAL
     // =====================================
 
-    loginModal.onclick = function (event) {
+    loginModal.addEventListener("click", function (event) {
 
         if (event.target === loginModal) {
+
             loginModal.classList.add("hidden");
+
         }
 
-    };
+    });
 
 
     // =====================================
     // CREATE ACCOUNT
     // =====================================
 
-    registerButton.onclick = function () {
+    registerButton.addEventListener("click", function () {
 
         const username = usernameInput.value.trim();
         const password = passwordInput.value;
 
+        // Username check
         if (username.length < 3) {
 
             accountMessage.textContent =
                 "❌ El usuario necesita mínimo 3 caracteres.";
 
             return;
+
         }
 
+        // Password check
         if (password.length < 4) {
 
             accountMessage.textContent =
                 "❌ La contraseña necesita mínimo 4 caracteres.";
 
             return;
+
         }
 
-        let accounts;
+
+        // Get accounts
+        let accounts = {};
 
         try {
 
@@ -91,32 +110,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
 
+            console.error("Error leyendo las cuentas:", error);
+
             accounts = {};
 
         }
 
 
+        // Check existing account
         if (accounts[username]) {
 
             accountMessage.textContent =
                 "❌ Ese usuario ya existe.";
 
             return;
+
         }
 
 
+        // Create account
         accounts[username] = {
+
             username: username,
             password: password
+
         };
 
 
+        // Save accounts
         localStorage.setItem(
             "mcAccounts",
             JSON.stringify(accounts)
         );
 
 
+        // Log user in
         localStorage.setItem(
             "mcCurrentUser",
             username
@@ -127,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "✅ ¡Cuenta creada!";
 
 
+        // Close modal
         setTimeout(function () {
 
             loginModal.classList.add("hidden");
@@ -138,19 +167,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }, 700);
 
-    };
+    });
 
 
     // =====================================
-    // LOGIN
+    // LOGIN EXISTING ACCOUNT
     // =====================================
 
-    loginExistingButton.onclick = function () {
+    loginExistingButton.addEventListener("click", function () {
 
         const username = usernameInput.value.trim();
         const password = passwordInput.value;
 
-        let accounts;
+
+        // Get accounts
+        let accounts = {};
 
         try {
 
@@ -160,29 +191,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
 
-            accounts = {};
+            console.error("Error leyendo las cuentas:", error);
+
+            accountMessage.textContent =
+                "❌ Error al cargar las cuentas.";
+
+            return;
 
         }
 
 
+        // Account doesn't exist
         if (!accounts[username]) {
 
             accountMessage.textContent =
                 "❌ Esa cuenta no existe.";
 
             return;
+
         }
 
 
+        // Wrong password
         if (accounts[username].password !== password) {
 
             accountMessage.textContent =
                 "❌ Contraseña incorrecta.";
 
             return;
+
         }
 
 
+        // Login successful
         localStorage.setItem(
             "mcCurrentUser",
             username
@@ -193,6 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "✅ ¡Sesión iniciada!";
 
 
+        // Close modal
         setTimeout(function () {
 
             loginModal.classList.add("hidden");
@@ -204,14 +246,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }, 500);
 
-    };
+    });
 
 
     // =====================================
     // LOGOUT
     // =====================================
 
-    logoutButton.onclick = function () {
+    logoutButton.addEventListener("click", function () {
 
         localStorage.removeItem(
             "mcCurrentUser"
@@ -219,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         updateProfile();
 
-    };
+    });
 
 
     // =====================================
@@ -234,13 +276,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (username) {
 
+            // Hide login button
             loginButton.classList.add("hidden");
 
+
+            // Show profile
             profile.classList.remove("hidden");
 
+
+            // Username
             usernameDisplay.textContent =
                 username;
 
+
+            // Avatar
             avatar.textContent =
                 username.charAt(0).toUpperCase();
 
@@ -248,8 +297,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         else {
 
+            // Show login button
             loginButton.classList.remove("hidden");
 
+
+            // Hide profile
             profile.classList.add("hidden");
 
         }
@@ -258,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================
-    // 5 SECOND SIGN-IN POPUP
+    // 5 SECOND SIGN-IN PROMPT
     // =====================================
 
     setTimeout(function () {
@@ -278,6 +330,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (wantsToSignIn) {
 
                 loginModal.classList.remove("hidden");
+
+                accountMessage.textContent = "";
 
                 usernameInput.focus();
 
